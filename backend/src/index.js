@@ -1,0 +1,31 @@
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+
+const connectDB = require("./db");
+const authRoutes = require("./routes/auth");
+const employeeRoutes = require("./routes/employees");
+const teamRoutes = require("./routes/teams");
+const errorHandler = require("./middlewares/errorHandler");
+
+const app = express();
+app.use(express.json());
+
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
+
+// CONNECT DB ON START
+connectDB();
+
+// REGISTER ROUTES
+app.use("/api/auth", authRoutes);
+app.use("/api/employees", employeeRoutes);
+app.use("/api/teams", teamRoutes);
+
+app.use(errorHandler);
+
+app.listen(5000, () => console.log("🚀 Server running on port 5000"));

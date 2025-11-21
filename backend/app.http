@@ -1,0 +1,163 @@
+#######################################
+# BASE URL
+#######################################
+
+@baseUrl = http://localhost:5000/api
+@token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsIm9yZ0lkIjozLCJpYXQiOjE3NjM3MTQ5MjEsImV4cCI6MTc2Mzc0MzcyMX0.m-vfGLiMZ6PAswqvH8xITEe15ywRy7sWMN7DWEhSVHM"
+
+#######################################
+# REGISTER (creates org + admin + returns token)
+#######################################
+
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "orgName": "Another Org",
+  "adminName": "Second Admin",
+  "email": "admin2@example.com",
+  "password": "test123"
+}
+
+###
+
+#######################################
+# LOGIN — THIS WILL SET GLOBAL TOKEN
+#######################################
+
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin2@example.com",
+  "password": "test123"
+}
+###
+> {%  
+  const resp = await response.json();
+  client.global.set("token", resp.token);
+  console.log("token=",token);
+%}
+###
+
+#######################################
+# CHECK TOKEN
+#######################################
+
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+
+###
+
+#######################################
+# EMPLOYEES API
+#######################################
+
+# Get all employees
+GET {{baseUrl}}/employees
+Authorization: Bearer {{token}}
+
+###
+
+# Create employee
+POST {{baseUrl}}/employees
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "first_name": "John",
+  "last_name": "Doe",
+  "email": "john@example.com",
+  "phone": "9876543210"
+}
+
+###
+
+# Get Employee by ID
+GET {{baseUrl}}/employees/1
+Authorization: Bearer {{token}}
+
+###
+
+# Update employee
+PUT {{baseUrl}}/employees/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "phone": "9000000000",
+  "first_name": "Johnny"
+}
+
+###
+
+# Delete employee
+DELETE {{baseUrl}}/employees/1
+Authorization: Bearer {{token}}
+
+###
+
+#######################################
+# TEAMS API
+#######################################
+
+# Get teams
+GET {{baseUrl}}/teams
+Authorization: Bearer {{token}}
+
+###
+
+# Create team
+POST {{baseUrl}}/teams
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Engineering",
+  "description": "Core backend team"
+}
+
+###
+
+# Update team
+PUT {{baseUrl}}/teams/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "description": "Updated description"
+}
+
+###
+
+# Delete team
+DELETE {{baseUrl}}/teams/1
+Authorization: Bearer {{token}}
+
+###
+
+#######################################
+# TEAM ASSIGNMENT
+#######################################
+
+# Assign one employee to team
+POST {{baseUrl}}/teams/1/assign
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "employeeId": 1
+}
+
+###
+
+# Unassign employee
+DELETE {{baseUrl}}/teams/1/unassign
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "employeeId": 1
+}
+
+###
