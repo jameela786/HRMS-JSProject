@@ -16,14 +16,12 @@ exports.register = async (req, res) => {
 
         const user = await createUser(orgId, adminName, email, passwordHash);
         const userId = user.lastID;
-
         await createLog(
             orgId,
             userId,
             "ORG_CREATED",
             { message: `User '${userId}' created organisation '${orgId}'` }
         );
-
         const token = jwt.sign(
             { userId, orgId },
             process.env.JWT_SECRET,

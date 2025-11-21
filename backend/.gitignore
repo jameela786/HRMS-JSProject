@@ -1,0 +1,5 @@
+# Dependencies
+/node_modules
+
+# SQLite Database (Optional, see section 3)
+*.sqlite

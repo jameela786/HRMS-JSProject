@@ -2,7 +2,7 @@ const path = require("path");
 const sqlite3 = require("sqlite3");
 const { open } = require("sqlite");
 
-const dbPath = path.join(__dirname, "../hrms_db.sqlite");
+const dbPath = path.join(__dirname, "../hrms.db.sqlite");
 
 let db;
 
