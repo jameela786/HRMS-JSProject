@@ -6,7 +6,16 @@ exports.getLogs = async (req, res) => {
     const limit = req.query.limit ? Number(req.query.limit) : 50;
 
     const logs = await db.all(
-      `SELECT * FROM logs WHERE organisation_id = ? ORDER BY timestamp DESC LIMIT ?`,
+      `
+      SELECT 
+        logs.*, 
+        users.name AS user_name
+      FROM logs
+      LEFT JOIN users ON logs.user_id = users.id
+      WHERE logs.organisation_id = ?
+      ORDER BY logs.timestamp DESC
+      LIMIT ?
+      `,
       [req.user.orgId, limit]
     );
 
