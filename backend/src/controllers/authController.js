@@ -20,7 +20,7 @@ exports.register = async (req, res) => {
             orgId,
             userId,
             "ORG_CREATED",
-            { message: `User '${userId}' created organisation '${orgId}'` }
+            { message: `User '${adminName}' created organisation '${orgName}'` }
         );
         const token = jwt.sign(
             { userId, orgId },
@@ -56,7 +56,7 @@ exports.login = async (req, res) => {
             user.organisation_id,
             user.id,
             "LOGIN",
-            { message: `User '${user.id}' logged in` }
+            { message: `User '${user.name}' logged in` }
         );
 
         res.json({ token, user });
