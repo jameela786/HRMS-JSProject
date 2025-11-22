@@ -181,3 +181,28 @@ exports.unassignEmployees = async (req, res) => {
         res.status(500).json({ error: "Failed to unassign employees", details: err.message });
     }
 };
+
+exports.getTeamById = async (req, res) => {
+    try {
+      const db = await connectDB();
+      const orgId = req.user.orgId;
+      const id = Number(req.params.id);
+  
+      const team = await db.get(
+        `SELECT * FROM teams WHERE id = ? AND organisation_id = ?`,
+        [id, orgId]
+      );
+  
+      if (!team) {
+        return res.status(404).json({ error: "Team not found" });
+      }
+  
+      res.json(team);
+    } catch (err) {
+      res.status(500).json({
+        error: "Failed to fetch team",
+        details: err.message
+      });
+    }
+  };
+  
