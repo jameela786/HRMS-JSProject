@@ -8,15 +8,30 @@ exports.getEmployees = async (req, res) => {
     const orgId = req.user.orgId;
 
     const rows = await db.all(
-      `SELECT * FROM employees WHERE organisation_id = ? ORDER BY id DESC`,
+      `SELECT e.*,
+        GROUP_CONCAT(t.name, ', ') AS team_names
+       FROM employees e
+       LEFT JOIN employee_teams et ON e.id = et.employee_id
+       LEFT JOIN teams t ON et.team_id = t.id
+       WHERE e.organisation_id = ?
+       GROUP BY e.id
+       ORDER BY e.id DESC`,
       [orgId]
     );
 
-    res.json(rows);
+    // Convert comma string → array
+    const formatted = rows.map(emp => ({
+      ...emp,
+      team_names: emp.team_names ? emp.team_names.split(", ") : []
+    }));
+
+    res.json(formatted);
+
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch employees", details: err.message });
   }
 };
+
 
 // ------------------ GET SINGLE EMPLOYEE ------------------
 exports.getEmployeeById = async (req, res) => {
