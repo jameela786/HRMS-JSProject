@@ -1,40 +1,117 @@
 const connectDB = require("../db");
 const { createLog } = require("../models/log");
 
+// exports.getEmployees = async (req, res) => {
+//     try {
+//         const db = await connectDB();
+//         const orgId = req.user.orgId;
+
+//         const rows = await db.all(
+//             `SELECT * FROM employees WHERE organisation_id = ? ORDER BY id DESC`,
+//             [orgId]
+//         );
+
+//         res.json(rows);
+//     } catch (err) {
+//         res.status(500).json({ error: "Failed to fetch employees", details: err.message });
+//     }
+// };
+
+// exports.getEmployeeById = async (req, res) => {
+//     try {
+//         const db = await connectDB();
+//         const orgId = req.user.orgId;
+//         const id = Number(req.params.id);
+
+//         const emp = await db.get(
+//             `SELECT * FROM employees WHERE id = ? AND organisation_id = ?`,
+//             [id, orgId]
+//         );
+
+//         if (!emp) return res.status(404).json({ error: "Employee not found" });
+
+//         res.json(emp);
+//     } catch (err) {
+//         res.status(500).json({ error: "Failed to retrieve employee", details: err.message });
+//     }
+// };
+// src/controllers/employeeController.js
+
+
 exports.getEmployees = async (req, res) => {
-    try {
-        const db = await connectDB();
-        const orgId = req.user.orgId;
+  try {
+    const db = await connectDB();
+    const orgId = req.user.orgId;
 
-        const rows = await db.all(
-            `SELECT * FROM employees WHERE organisation_id = ? ORDER BY id DESC`,
-            [orgId]
-        );
+    const employees = await db.all(
+      `SELECT e.*,
+              GROUP_CONCAT(t.name) AS team_names_csv,
+              GROUP_CONCAT(et.team_id) AS team_ids_csv
+       FROM employees e
+       LEFT JOIN employee_teams et ON e.id = et.employee_id
+       LEFT JOIN teams t ON t.id = et.team_id
+       WHERE e.organisation_id = ?
+       GROUP BY e.id
+       ORDER BY e.id DESC`,
+      [orgId]
+    );
 
-        res.json(rows);
-    } catch (err) {
-        res.status(500).json({ error: "Failed to fetch employees", details: err.message });
-    }
+    // Convert CSV strings to arrays
+    const normalized = employees.map((emp) => {
+      const teamNames = emp.team_names_csv ? emp.team_names_csv.split(",") : [];
+      const teamIds = emp.team_ids_csv
+        ? emp.team_ids_csv.split(",").map((s) => Number(s))
+        : [];
+      // remove the temporary csv fields and attach arrays
+      const { team_names_csv, team_ids_csv, ...rest } = emp;
+      return {
+        ...rest,
+        team_names: teamNames,
+        team_ids: teamIds,
+      };
+    });
+
+    res.json(normalized);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch employees", details: err.message });
+  }
 };
 
 exports.getEmployeeById = async (req, res) => {
-    try {
-        const db = await connectDB();
-        const orgId = req.user.orgId;
-        const id = Number(req.params.id);
+  try {
+    const db = await connectDB();
+    const orgId = req.user.orgId;
+    const id = Number(req.params.id);
 
-        const emp = await db.get(
-            `SELECT * FROM employees WHERE id = ? AND organisation_id = ?`,
-            [id, orgId]
-        );
+    const emp = await db.get(
+      `SELECT e.*,
+              GROUP_CONCAT(t.name) AS team_names_csv,
+              GROUP_CONCAT(et.team_id) AS team_ids_csv
+       FROM employees e
+       LEFT JOIN employee_teams et ON e.id = et.employee_id
+       LEFT JOIN teams t ON t.id = et.team_id
+       WHERE e.id = ? AND e.organisation_id = ?
+       GROUP BY e.id`,
+      [id, orgId]
+    );
 
-        if (!emp) return res.status(404).json({ error: "Employee not found" });
+    if (!emp) return res.status(404).json({ error: "Employee not found" });
 
-        res.json(emp);
-    } catch (err) {
-        res.status(500).json({ error: "Failed to retrieve employee", details: err.message });
-    }
+    const teamNames = emp.team_names_csv ? emp.team_names_csv.split(",") : [];
+    const teamIds = emp.team_ids_csv ? emp.team_ids_csv.split(",").map((s) => Number(s)) : [];
+
+    const { team_names_csv, team_ids_csv, ...rest } = emp;
+
+    res.json({
+      ...rest,
+      team_names: teamNames,
+      team_ids: teamIds,
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to retrieve employee", details: err.message });
+  }
 };
+
 
 exports.createEmployee = async (req, res) => {
     try {
