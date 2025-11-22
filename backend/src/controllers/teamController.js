@@ -7,7 +7,13 @@ exports.getTeams = async (req, res) => {
         const orgId = req.user.orgId;
 
         const rows = await db.all(
-            `SELECT * FROM teams WHERE organisation_id = ? ORDER BY id DESC`,
+            `SELECT t.*,
+            COUNT(et.employee_id) AS member_count
+     FROM teams t
+     LEFT JOIN employee_teams et ON t.id = et.team_id
+     WHERE t.organisation_id = ?
+     GROUP BY t.id
+     ORDER BY t.id DESC`,
             [orgId]
         );
 
