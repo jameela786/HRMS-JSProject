@@ -68,7 +68,10 @@ const EmployeeEdit = () => {
     if (!formData.email.trim()) newErrors.email = "Email required";
     else if (!/\S+@\S+\.\S+/.test(formData.email))
       newErrors.email = "Invalid email";
-    if (!formData.phone.trim()) newErrors.phone = "Phone required";
+    // if (!formData.phone.trim()) newErrors.phone = "Phone required";
+    if (!formData.phone.trim() || formData.phone.trim().length !== 10) {
+      newErrors.phone = "Phone number is required and must be 10 digits.";
+    }
     return newErrors;
   };
 
