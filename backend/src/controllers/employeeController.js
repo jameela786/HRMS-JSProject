@@ -40,19 +40,68 @@ exports.getEmployeeById = async (req, res) => {
     const orgId = req.user.orgId;
     const id = Number(req.params.id);
 
+    // 1️⃣ Fetch main employee info
     const emp = await db.get(
-      `SELECT * FROM employees WHERE id = ? AND organisation_id = ?`,
+      `SELECT *
+       FROM employees
+       WHERE id = ? AND organisation_id = ?`,
       [id, orgId]
     );
 
-    if (!emp)
+    if (!emp) {
       return res.status(404).json({ error: "Employee not found" });
+    }
+
+    // 2️⃣ Fetch assigned team IDs
+    const teamRows = await db.all(
+      `SELECT team_id 
+       FROM employee_teams 
+       WHERE employee_id = ?`,
+      [id]
+    );
+
+    emp.team_ids = teamRows.map(row => row.team_id);
+
+    // 3️⃣ Fetch team names for UI display
+    const teamNameRows = await db.all(
+      `SELECT t.name
+       FROM teams t
+       JOIN employee_teams et ON t.id = et.team_id
+       WHERE et.employee_id = ? AND t.organisation_id = ?`,
+      [id, orgId]
+    );
+
+    emp.team_names = teamNameRows.map(row => row.name);
 
     res.json(emp);
+
   } catch (err) {
-    res.status(500).json({ error: "Failed to retrieve employee", details: err.message });
+    res.status(500).json({
+      error: "Failed to retrieve employee",
+      details: err.message,
+    });
   }
 };
+
+// exports.getEmployeeById = async (req, res) => {
+//   try {
+//     const db = await connectDB();
+//     const orgId = req.user.orgId;
+//     const id = Number(req.params.id);
+
+//     const emp = await db.get(
+//       `SELECT * FROM employees WHERE id = ? AND organisation_id = ?`,
+//       [id, orgId]
+//     );
+
+//     if (!emp)
+//       return res.status(404).json({ error: "Employee not found" });
+
+//     res.json(emp);
+//   } catch (err) {
+//     res.status(500).json({ error: "Failed to retrieve employee", details: err.message });
+//   }
+// };
 
 // ------------------ CREATE EMPLOYEE ------------------
 exports.createEmployee = async (req, res) => {
