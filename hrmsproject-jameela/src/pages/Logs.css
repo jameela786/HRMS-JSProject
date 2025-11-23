@@ -1,0 +1,58 @@
+.logs-container {
+    display: flex;
+    background: #f9fbff;
+  }
+  
+  .logs-content {
+    flex: 1;
+    margin-left: 260px; /* account for sidebar */
+    padding: 30px 40px;
+  }
+  
+  .logs-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #1f2937;
+  }
+  
+  .loading,
+  .empty-msg {
+    font-size: 1.1rem;
+    color: #6b7280;
+    margin-top: 20px;
+  }
+  
+  .logs-table-wrapper {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    overflow-x: auto;
+  }
+  
+  .logs-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .logs-table th {
+    text-align: left;
+    background: #eef2ff;
+    padding: 12px;
+    font-weight: 600;
+    color: #4f46e5;
+    border-bottom: 2px solid #e0e7ff;
+  }
+  
+  .logs-table td {
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 0.95rem;
+  }
+  
+  .logs-table tr:hover {
+    background: #f9fafb;
+  }
+
+  

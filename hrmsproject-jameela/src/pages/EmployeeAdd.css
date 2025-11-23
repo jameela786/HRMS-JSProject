@@ -1,0 +1,126 @@
+.employee-add-container {
+    /* display: flex;
+    width: 100%;
+    background: #f9fbff;
+    min-height: 100vh; */
+    display: flex;
+    width: 100%;
+  }
+  
+  /* FIX: shift content to the right of fixed sidebar */
+  .employee-add-content {
+    /* flex: 1;
+    padding: 20px 40px;
+    margin-left: 260px;  
+    min-height: 100vh; */
+    margin-left: 260px;      /* align after sidebar */
+    margin-top: 80px;        /* space below header */
+    width: calc(100% - 260px);
+    display: flex;
+    justify-content: center; /* center horizontally */
+    padding: 20px;
+  }
+  
+  .form-wrapper {
+    /* background: white;
+    padding: 25px 30px;
+    max-width: 600px;
+    margin-top: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08); */
+    background: white;
+    padding: 25px 30px;
+    width: 100%;
+    max-width: 550px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  
+  .employee-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #333;
+  }
+  
+  input[type="text"],
+  input[type="email"] {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccd4e0;
+    font-size: 15px;
+  }
+  
+  input:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79,70,229,0.15);
+  }
+  
+  .error {
+    border-color: #dc2626 !important;
+  }
+  
+  .error-message {
+    color: #dc2626;
+    font-size: 0.8rem;
+    margin-top: 2px;
+  }
+  
+  .error-alert {
+    background: #fde2e2;
+    padding: 10px;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    margin-bottom: 12px;
+  }
+  
+  /* Teams section */
+  .teams-checkbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .team-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    padding: 6px 0;
+  }
+  
+  /* Button */
+  .submit-button {
+    padding: 12px;
+    background: #4f46e5;
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .submit-button:hover {
+    background: #4338ca;
+  }
+  
+  /* Loader */
+  .loader {
+    font-size: 1.4rem;
+    text-align: center;
+    padding: 40px;
+    color: #555;
+  }
+  

@@ -1,0 +1,38 @@
+/* .header {
+    width: 100%;
+    background: #f9fafb;
+    padding: 1rem 2rem;
+    margin-left: 350px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .header h2 {
+    margin: 0;
+    color: #111827;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+
+   */
+
+   /* Header.css */
+.header {
+  position: fixed;
+  top: 0;
+  left: 260px;     /* aligns perfectly next to sidebar */
+  right: 0;
+  height: 64px;
+  background: #f9fafb;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  z-index: 10;
+}
+
+.header h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
